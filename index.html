@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PR Ghostwriter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+      margin: 0;
+      padding: 40px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    p {
+      color: #9ca3af;
+    }
+    textarea {
+      width: 100%;
+      min-height: 160px;
+      padding: 12px;
+      margin-top: 16px;
+      background: #020617;
+      color: #e5e7eb;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      resize: vertical;
+    }
+    button {
+      margin-top: 16px;
+      padding: 12px 20px;
+      background: #22c55e;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:disabled {
+      background: #334155;
+      cursor: not-allowed;
+    }
+    .result {
+      margin-top: 24px;
+      white-space: pre-wrap;
+      background: #020617;
+      border: 1px solid #334155;
+      padding: 16px;
+      border-radius: 6px;
+    }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .lang span {
+      cursor: pointer;
+      margin-left: 10px;
+      color: #9ca3af;
+    }
+    .lang span.active {
+      color: #22c55e;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top">
+      <h1 id="title">PR Ghostwriter</h1>
+      <div class="lang">
+        <span onclick="setLang('en')" id="lang-en" class="active">EN</span>
+        <span onclick="setLang('ua')" id="lang-ua">UA</span>
+      </div>
+    </div>
+
+    <p id="subtitle">
+      Generate a clear pull request description in seconds.
+    </p>
+
+    <textarea id="input" placeholder="Paste your commit messages, diff or short description here..."></textarea>
+
+    <button id="generateBtn" onclick="generatePR()">Generate PR</button>
+
+    <div class="result" id="result" style="display:none;"></div>
+  </div>
+
+  <script>
+    let lang = "en";
+    let usesLeft = 2;
+
+    const texts = {
+      en: {
+        title: "PR Ghostwriter",
+        subtitle: "Generate a clear pull request description in seconds.",
+        placeholder: "Paste your commit messages, diff or short description here...",
+        button: "Generate PR",
+        limit: "You have used all free attempts.",
+      },
+      ua: {
+        title: "PR Ghostwriter",
+        subtitle: "Згенеруйте зрозумілий опис pull request за кілька секунд.",
+        placeholder: "Вставте коміти, diff або короткий опис змін...",
+        button: "Згенерувати PR",
+        limit: "Ви використали всі безкоштовні спроби.",
+      }
+    };
+
+    function setLang(l) {
+      lang = l;
+      document.getElementById("title").innerText = texts[l].title;
+      document.getElementById("subtitle").innerText = texts[l].subtitle;
+      document.getElementById("input").placeholder = texts[l].placeholder;
+      document.getElementById("generateBtn").innerText = texts[l].button;
+      document.getElementById("lang-en").classList.remove("active");
+      document.getElementById("lang-ua").classList.remove("active");
+      document.getElementById("lang-" + l).classList.add("active");
+    }
+
+    function generatePR() {
+      if (usesLeft <= 0) {
+        alert(texts[lang].limit);
+        return;
+      }
+
+      const input = document.getElementById("input").value.trim();
+      if (!input) return;
+
+      usesLeft--;
+
+      const result = lang === "en"
+        ? `### Summary
+This PR introduces the following changes.
+
+### What was done
+${input}
+
+### Why
+To improve functionality and maintainability.
+
+### How to test
+Run the application and verify the changes.
+
+### Possible risks
+Minimal, related to modified logic.
+`
+        : `### Коротко
+Цей PR містить наступні зміни.
+
+### Що зроблено
+${input}
+
+### Навіщо
+Для покращення функціональності та підтримки.
+
+### Як перевірити
+Запустіть застосунок і перевірте зміни.
+
+### Можливі ризики
+Мінімальні, повʼязані зі зміненою логікою.
+`;
+
+      const resultBox = document.getElementById("result");
+      resultBox.style.display = "block";
+      resultBox.innerText = result;
+    }
+  </script>
+</body>
+</html>

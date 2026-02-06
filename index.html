@@ -95,7 +95,12 @@ No overthinking. Just copy & paste.
     <textarea id="input" placeholder="Paste your commit messages, diff or short description here..."></textarea>
 
     <button id="generateBtn" onclick="generatePR()">Generate PR</button>
-
+<div id="limitBox" style="display:none; margin-top:16px;">
+  <p id="limitText"></p>
+  <a id="payLink" href="#" target="_blank">
+    <button>Unlock Unlimited</button>
+  </a>
+</div>
     <div class="result" id="result" style="display:none;"></div>
   </div>
 
@@ -135,9 +140,11 @@ No overthinking. Just copy & paste.
 
     function generatePR() {
       if (usesLeft <= 0) {
-        alert(texts[lang].limit);
-        return;
-      }
+  document.getElementById("limitText").innerText = texts[lang].limit;
+  document.getElementById("payLink").href = "https://cleartools.lemonsqueezy.com/checkout/buy/87af28d9-8768-4a57-9c88-ccfb38a1336c";
+  document.getElementById("limitBox").style.display = "block";
+  return;
+}
 
       const input = document.getElementById("input").value.trim();
       if (!input) return;
